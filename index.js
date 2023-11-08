@@ -32,12 +32,19 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
         const serviceCollection = client.db("serviceDB").collection("service")
+        const orderCollection = client.db("serviceDB").collection("order")
 
         app.get('/service', async(req, res) =>{
             const cursor = serviceCollection.find();
             const result = await cursor.toArray();
             res.send(result)
         })
+        app.get('/order', async(req, res) =>{
+            const cursor = orderCollection.find();
+            const result = await cursor.toArray();
+            res.send(result)
+        })
+
         app.get('/service/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
