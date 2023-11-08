@@ -68,6 +68,30 @@ async function run() {
             const result = await serviceCollection.deleteOne(query)
             res.send(result);
           })
+
+          app.put('/service/:id', async (req, res)=>{
+            const id = req.params.id;
+            console.log(id);
+            const filter = {_id: new ObjectId(id)}
+            const options = {upsert: true};
+            const updatedService = req.body
+            const service = {
+                $set: {
+
+         name: updatedService.name,
+         serviceName: updatedService.serviceName,
+         url: updatedService.url,
+         area: updatedService.area,
+         price: updatedService.price,
+         review: updatedService.review,
+         category: updatedService.category,
+         description : updatedService.description,
+                }
+            }
+
+            const result = await serviceCollection.updateOne(filter, service, options)
+res.send(result)
+          })
         
         // order
         
