@@ -34,30 +34,64 @@ async function run() {
         const serviceCollection = client.db("serviceDB").collection("service")
         const orderCollection = client.db("serviceDB").collection("order")
 
-        app.get('/service', async(req, res) =>{
+
+       // service
+
+        app.get('/service', async (req, res) => {
             const cursor = serviceCollection.find();
             const result = await cursor.toArray();
             res.send(result)
         })
-        app.get('/order', async(req, res) =>{
-            const cursor = orderCollection.find();
-            const result = await cursor.toArray();
-            res.send(result)
-        })
-
         app.get('/service/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
             const result = await serviceCollection.findOne(query)
             res.send(result)
-          })
+        })
+        app.get('/addedService', async (req, res)=>{
+            const email =req.query.email
+            const query = {email: email}
+            const result = await serviceCollection.find(query).toArray();
+            res.send(result)
+        })
 
         app.post('/service', async (req, res) => {
             const newService = req.body;
             console.log(newService);
             const result = await serviceCollection.insertOne(newService)
             res.send(result);
-    })
+        })
+        app.delete('/service/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+      
+            const result = await serviceCollection.deleteOne(query)
+            res.send(result);
+          })
+        
+        // order
+        
+        app.post('/order', async (req, res) => {
+            const newOrder = req.body;
+            const result = await orderCollection.insertOne(newOrder)
+            res.send(result);
+        })
+        app.get('/order/:email', async (req, res) => {
+            const email = req.params.email
+            console.log(email);
+            const query = { userEmail: {$in: [email]} }
+            const result = await orderCollection.find(query).toArray()
+            res.send(result)
+        })
+
+        // app.get('/order', async (req, res) => {
+        //     const cursor = orderCollection.find();
+        //     const result = await cursor.toArray();
+        //     res.send(result)
+        // })
+
+
+
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
