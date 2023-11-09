@@ -10,12 +10,6 @@ app.use(cors());
 app.use(express.json())
 
 
-// shorif
-// VOEQlpmSddk2GVQw
-
-
-
-
 const uri = `mongodb+srv://${process.env.USER}:${process.env.PASSWORD}@cluster0.shfwl8n.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -35,7 +29,7 @@ async function run() {
         const orderCollection = client.db("serviceDB").collection("order")
 
 
-       // service
+        // service
 
         app.get('/service', async (req, res) => {
             const cursor = serviceCollection.find();
@@ -48,9 +42,9 @@ async function run() {
             const result = await serviceCollection.findOne(query)
             res.send(result)
         })
-        app.get('/addedService', async (req, res)=>{
-            const email =req.query.email
-            const query = {email: email}
+        app.get('/addedService', async (req, res) => {
+            const email = req.query.email
+            const query = { email: email }
             const result = await serviceCollection.find(query).toArray();
             res.send(result)
         })
@@ -64,36 +58,36 @@ async function run() {
         app.delete('/service/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
-      
+
             const result = await serviceCollection.deleteOne(query)
             res.send(result);
-          })
+        })
 
-          app.put('/service/:id', async (req, res)=>{
+        app.put('/service/:id', async (req, res) => {
             const id = req.params.id;
             console.log(id);
-            const filter = {_id: new ObjectId(id)}
-            const options = {upsert: true};
+            const filter = { _id: new ObjectId(id) }
+            const options = { upsert: true };
             const updatedService = req.body
             const service = {
                 $set: {
 
-         name: updatedService.name,
-         serviceName: updatedService.serviceName,
-         url: updatedService.url,
-         area: updatedService.area,
-         price: updatedService.price,
-         review: updatedService.review,
-         category: updatedService.category,
-         description : updatedService.description,
+                    name: updatedService.name,
+                    serviceName: updatedService.serviceName,
+                    url: updatedService.url,
+                    area: updatedService.area,
+                    price: updatedService.price,
+                    review: updatedService.review,
+                    category: updatedService.category,
+                    description: updatedService.description,
                 }
             }
             const result = await serviceCollection.updateOne(filter, service, options)
-res.send(result)
-          })
-        
+            res.send(result)
+        })
+
         // order
-        
+
         app.post('/order', async (req, res) => {
             const newOrder = req.body;
             const result = await orderCollection.insertOne(newOrder)
@@ -102,7 +96,7 @@ res.send(result)
         app.get('/order/:email', async (req, res) => {
             const email = req.params.email
             console.log(email);
-            const query = { userEmail: {$in: [email]} }
+            const query = { userEmail: { $in: [email] } }
             const result = await orderCollection.find(query).toArray()
             res.send(result)
         })
