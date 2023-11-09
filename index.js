@@ -48,13 +48,13 @@ async function run() {
             const result = await serviceCollection.find(query).toArray();
             res.send(result)
         })
-
+        // post operation 
         app.post('/service', async (req, res) => {
             const newService = req.body;
-            console.log(newService);
             const result = await serviceCollection.insertOne(newService)
             res.send(result);
         })
+        // delete operation 
         app.delete('/service/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
@@ -62,10 +62,9 @@ async function run() {
             const result = await serviceCollection.deleteOne(query)
             res.send(result);
         })
-
+        // update operation 
         app.put('/service/:id', async (req, res) => {
             const id = req.params.id;
-            console.log(id);
             const filter = { _id: new ObjectId(id) }
             const options = { upsert: true };
             const updatedService = req.body
@@ -86,7 +85,7 @@ async function run() {
             res.send(result)
         })
 
-        // order
+        // order operation 
 
         app.post('/order', async (req, res) => {
             const newOrder = req.body;
